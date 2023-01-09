@@ -3,14 +3,17 @@ package cora.ho.websitedesign_spring.domian.aboutUs;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.List;
+
 
 @Entity
-public class AboutUs {
+public class Company {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @NotBlank(message = "The Company name cannot be enpty!")
+    @NotBlank(message = "The Company name cannot be empty!")
+    @Column(updatable = false, unique = true)
     private String companyName;
     @NotBlank(message = "The Introduction cannot be empty!")
     private String introduction;
@@ -18,6 +21,8 @@ public class AboutUs {
     private String mission;
     @NotBlank(message = "The Guiding Principles cannot be empty!")
     private String guidingPrinciples;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "company")
+    private List<Staff> allStaff;
 
     public Long getId() {
         return id;
@@ -27,7 +32,7 @@ public class AboutUs {
         this.id = id;
     }
 
-    public AboutUs() {
+    public Company() {
     }
 
     public String getCompanyName() {
@@ -60,5 +65,13 @@ public class AboutUs {
 
     public void setGuidingPrinciples(String guidingPrinciples) {
         this.guidingPrinciples = guidingPrinciples;
+    }
+
+    public List<Staff> getAllStaff() {
+        return allStaff;
+    }
+
+    public void setAllStaff(List<Staff> allStaff) {
+        this.allStaff = allStaff;
     }
 }
