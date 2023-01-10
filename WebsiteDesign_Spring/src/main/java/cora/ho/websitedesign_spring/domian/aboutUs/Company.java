@@ -1,5 +1,6 @@
 package cora.ho.websitedesign_spring.domian.aboutUs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -21,7 +22,8 @@ public class Company {
     private String mission;
     @NotBlank(message = "The Guiding Principles cannot be empty!")
     private String guidingPrinciples;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "company")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, orphanRemoval = true, mappedBy = "company")
+    @JsonIgnore
     private List<Staff> allStaff;
 
     public Long getId() {
