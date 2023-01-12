@@ -1,17 +1,31 @@
 
 .layout-header {
-    background-color: #192841;
+    background-color: #a3ac5d;
     block-size: 100px;
 }
 .layout-header menu {
-    align-content: center;
+    padding-left: 20%;
 }
 
-.layout-header a {
-    color: white;
-    font-size: 18px;
+.layout-header-link {
+    background-color: #a3ac5d;
+    text-align: center;
     width: 100px;
     block-size: 100px;
+    display: inline-block;
+}
+
+.layout-header-link a {
+    color: black;
+    font-size: 18px;
+}
+
+a:hover{
+    background-color: white;
+}
+
+.layout-separation {
+    display: inline-block;
 }
 
 .layout-main {
