@@ -1,7 +1,8 @@
-package cora.ho.websitedesign_spring.services.introServices;
+package cora.ho.websitedesign_spring.services;
 
 import cora.ho.websitedesign_spring.domian.aboutUs.Company;
 import cora.ho.websitedesign_spring.domian.aboutUs.Staff;
+import cora.ho.websitedesign_spring.exceptions.CompanyNotFoundException;
 import cora.ho.websitedesign_spring.repositories.introRepositories.CompanyRepo;
 import cora.ho.websitedesign_spring.repositories.introRepositories.StaffRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,27 +22,15 @@ public class StaffService {
     @Autowired
     private CompanyRepo companyRepo;
 
-    public void addStaff() {
-        Company company = companyRepo.findByCompanyName("NAMI");
-        Staff chairman = new Staff("John", "Smith", "chairman", "Prof.Smith pursued his studies at the University of Liverpool, United Kingdom", company);
-        Staff staff1 = new Staff("Kwan Ann", "Chor", "staff", "staff info", company);
-        Staff staff2 = new Staff("Kwan Ann", "Chor", "staff", "staff info", company);
-        Staff staff3 = new Staff("Kwan Ann", "Chor", "staff", "staff info", company);
-        Staff staff4 = new Staff("Kwan Ann", "Chor", "staff", "staff info", company);
-        Staff staff5 = new Staff("Kwan Ann", "Chor", "staff", "staff info", company);
-        List<Staff> staffs = Arrays.asList(chairman, staff1, staff2, staff3, staff4, staff5);
-        staffRepo.saveAll(staffs);
+    public Staff addOrUpdateStaff(String companyName, Staff staff) {
+        Company company = companyRepo.findByCompanyName(companyName);
+        if (company == null) {
+            throw new CompanyNotFoundException("Company: " + companyName + " does not found.");
+        }
+        staff.setCompany(company);
+        return staffRepo.save(staff);
     }
 
-    public void addManagementStaff() {
-        Company company = companyRepo.findByCompanyName("NAMI");
-        Staff staff6 = new Staff("Kwan Ann", "Chor", "chief executive officer", "staff info", company);
-        Staff staff7 = new Staff("Kwan Ann", "Chor", "chief technology officer", "staff info", company);
-        Staff staff8 = new Staff("Kwan Ann", "Chor", "chief commercial officer", "staff info", company);
-        Staff staff9 = new Staff("Kwan Ann", "Chor", "chief operating officer", "staff info", company);
-        List<Staff> staffs = Arrays.asList(staff6, staff7, staff8, staff9);
-        staffRepo.saveAll(staffs);
-    }
     public List<Staff> findStaffForBoardOfDirector(String companyName) {
         Company company = companyRepo.findByCompanyName(companyName.toUpperCase());
         Long id = company.getId();
