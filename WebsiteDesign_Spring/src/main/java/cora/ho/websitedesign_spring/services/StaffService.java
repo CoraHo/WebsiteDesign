@@ -2,16 +2,12 @@ package cora.ho.websitedesign_spring.services;
 
 import cora.ho.websitedesign_spring.domian.aboutUs.Company;
 import cora.ho.websitedesign_spring.domian.aboutUs.Staff;
-import cora.ho.websitedesign_spring.exceptions.CompanyNotFoundException;
-import cora.ho.websitedesign_spring.repositories.introRepositories.CompanyRepo;
+import cora.ho.websitedesign_spring.exceptions.NotFoundException;
 import cora.ho.websitedesign_spring.repositories.introRepositories.StaffRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class StaffService {
@@ -20,19 +16,17 @@ public class StaffService {
     private StaffRepo staffRepo;
 
     @Autowired
-    private CompanyRepo companyRepo;
+    private CompanyService companyService;
 
     public Staff addOrUpdateStaff(String companyName, Staff staff) {
-        Company company = companyRepo.findByCompanyName(companyName);
-        if (company == null) {
-            throw new CompanyNotFoundException("Company: " + companyName + " does not found.");
-        }
+        staff.setPosition(staff.getPosition().toLowerCase());
+        Company company = companyService.findCompanyByName(companyName.toUpperCase());
         staff.setCompany(company);
         return staffRepo.save(staff);
     }
 
     public List<Staff> findStaffForBoardOfDirector(String companyName) {
-        Company company = companyRepo.findByCompanyName(companyName.toUpperCase());
+        Company company = companyService.findCompanyByName(companyName.toUpperCase());
         Long id = company.getId();
         List<Staff> allStaff = staffRepo.findAllByCompany_Id(id);
         List<Staff> staffOnBoard = new ArrayList<>();
@@ -42,11 +36,14 @@ public class StaffService {
                 staffOnBoard.add(s);
             }
         }
+        if (staffOnBoard.size() == 0) {
+            throw new NotFoundException("Staff for Board of Directors does not found.");
+        }
         return staffOnBoard;
     }
 
     public List<Staff> findStaffForManagement(String companyName) {
-        Company company = companyRepo.findByCompanyName(companyName.toUpperCase());
+        Company company = companyService.findCompanyByName(companyName.toUpperCase());
 
         Long id = company.getId();
         List<Staff> allStaff = staffRepo.findAllByCompany_Id(id);
@@ -57,6 +54,9 @@ public class StaffService {
             if (position.contains("chief")) {
                 staffOnManagement.add(s);
             }
+        }
+        if (staffOnManagement.size() == 0) {
+            throw new NotFoundException("Staff for Management does not found.");
         }
         return staffOnManagement;
     }
