@@ -21,8 +21,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler
-    public final ResponseEntity<?> handleCompanyNotFound(CompanyNotFoundException exception, WebRequest request) {
-        CompanyNotFoundExceptionResponse companyNotFoundExceptionResponse = new CompanyNotFoundExceptionResponse(exception.getMessage());
-        return new ResponseEntity<>(companyNotFoundExceptionResponse, HttpStatus.BAD_REQUEST);
+    public final ResponseEntity<?> handleCompanyNotFound(NotFoundException exception, WebRequest request) {
+        NotFoundExceptionResponse notFoundExceptionResponse = new NotFoundExceptionResponse(exception.getMessage());
+        return new ResponseEntity<>(notFoundExceptionResponse, HttpStatus.NOT_FOUND);
     }
 }
