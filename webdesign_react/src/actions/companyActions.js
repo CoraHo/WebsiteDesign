@@ -11,5 +11,4 @@ export const getAboutUs = (companyName) => async dispatch => {
             });
         });
 
-
 }
